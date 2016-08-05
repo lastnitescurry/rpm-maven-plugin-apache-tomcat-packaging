@@ -16,14 +16,13 @@ Proving ground to see if maven rpm plugin can be used.
 
 	netstat -rn
 
-http://superuser.com/questions/310697/connect-to-the-host-machine-from-a-virtualbox-guest-os
-
+* http://superuser.com/questions/310697/connect-to-the-host-machine-from-a-virtualbox-guest-os
 
 ## Maven Plugin
 
 * http://www.mojohaus.org/rpm-maven-plugin/example1.html
 * https://thejiraguy.wordpress.com/2013/12/17/deploying-jira-in-the-enterprise-part-2-packaging-using-the-rpm-maven-plugin
-
+* https://books.sonatype.com/nexus-book/reference/yum-example-usage.html#yum-rpm-pom
 
 ## TEST 
 #### Install
