@@ -1,0 +1,37 @@
+#servers.yaml.dev
+- name: jenkins.agent.007.farrengold.ie
+  box:  puppetlabs/centos-6.6-64-nocm
+  env:  dev
+  role: allinone
+  ram:  6288
+  vram: 128
+  cpus: 2
+  desc: Jenkins Agent - centos-6.6-64
+  ip:   192.168.100.10
+  network: private_network
+  synced_folder:
+    software:
+       local:   D:/Software
+       remote:  /opt/software
+  provision:
+#    yum_update:
+#      inline:   yum --assumeyes update
+    yum_install_remote:
+      inline:   yum --assumeyes install git rpm-build
+    yum_install_local:
+      inline:   yum --assumeyes install /opt/software/Oracle/Java/1.8/jdk-8u91-linux-x64.rpm
+    maven:
+      inline:   mkdir -p /opt/app/maven; cd /opt/app/maven; tar xzvf /opt/software/Apache/Maven/apache-maven-3.3.9-bin.tar.gz; ln -s /opt/app/maven/apache-maven-3.3.9/bin/mvn /usr/bin/mvn
+    maven_configuration:
+      inline:   mkdir -p /home/vagrant/.m2; cp /vagrant/src/site/resources/settings.xml /home/vagrant/.m2; chown -R vagrant:vagrant /home/vagrant/.m2
+#    profile_vagrant:
+#      inline:   mkdir -p /opt/app/maven; cd /opt/app/maven; tar xzvf /opt/software/Apache/Maven/apache-maven-3.3.9-bin.tar.gz; chown -R vagrant:vagrant /opt/app/maven
+#      echo MAVEN_HOME=/opt/app/maven/apache-maven-3.3.9 >> /home/vagrant/.bashrc
+#      echo JAVA_HOME=/opt/app/maven/apache-maven-3.3.9 >> /home/vagrant/.bashrc
+#      echo export MAVEN_HOME=/opt/app/maven/apache-maven-3.3.9 >> /home/vagrant/.bashrc
+#      ls -al /usr/bin/
+    jenkins_agent:
+      inline:   mkdir -p /opt/app/jenkins; wget -O /opt/app/jenkins/slave.jar  http://10.0.2.2:9090/jnlpJars/slave.jar; chown -R vagrant:vagrant /opt/app/jenkins
+#    jenkins_agent_run:
+#      inline:   cd /opt/app/jenkins; java -jar /opt/app/jenkins/slave.jar -jnlpUrl http://10.0.2.2:9090/computer/LINUXAgent/slave-agent.jnlp
+# Not required, can be configured in Jenkins console
