@@ -10,20 +10,6 @@
 
   <description>Repackage Tomcat Distribution as rpm file which puppet can deploy</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-    </dependency>
-    <!-- J2EE Servlet Spec -->
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <pluginManagement>
       <plugins>
@@ -67,12 +53,6 @@
           <license>Apache Software License</license>
           <distribution>Farrengold 2016</distribution>
           <group>System Environmnet/Applications</group>
-
-<!-- 
-          <defineStatements>
-            <defineStatement>tomcat_home /opt/app/tomcat/%{version}</defineStatement>
-          </defineStatements>
- -->
           <mappings>
             <mapping>
               <directory>/opt/app/tomcat/${version}</directory>
@@ -85,105 +65,13 @@
                 </source>
               </sources>
             </mapping>
-            <!-- 
-            <mapping>
-              <directory>%{tomcat_home}/bin</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/bin</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>%{tomcat_home}/conf</directory>
-              <filemode>755</filemode>
-              <username>tomcat</username>
-              <groupname>tomcat</groupname>
-              <sources>
-                <source>
-                  <location>target/apache-tomcat-${project.version}/conf</location>
-                </source>
-              </sources>
-            </mapping>
-             -->
           </mappings>
-          <!-- 
-          <prepareScriptlet>
-            <script>tar xzvf ${distribution.source}</script>
-          </prepareScriptlet>
-           -->
           <preinstallScriptlet>
             <script>
 getent group tomcat > /dev/null || groupadd -r tomcat
 getent passwd tomcat > /dev/null || useradd -r -g tomcat tomcat
             </script>
           </preinstallScriptlet>
-<!-- 
-          <installScriptlet>
-            <script>
-install -d -m 755 %{buildroot}/%{tomcat_home}/
-cp -R * %{buildroot}/%{tomcat_home}/
-            </script>
-          </installScriptlet>
- -->
         </configuration>
       </plugin>
     </plugins>
@@ -194,6 +82,7 @@ cp -R * %{buildroot}/%{tomcat_home}/
     <maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
     <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
 
+	<!-- FIXME Remove hardcode, download from Nexus via dependency -->
     <distribution.source>/opt/software/Apache/Tomcat/apache-tomcat-${project.version}.tar.gz</distribution.source>
 
   </properties>
