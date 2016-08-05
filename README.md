@@ -13,7 +13,8 @@ Proving ground to see if maven rpm plugin can be used.
 * Jenkins Job to build project
 
 ## Get host ip for VM
-netstat -rn
+
+	netstat -rn
 
 http://superuser.com/questions/310697/connect-to-the-host-machine-from-a-virtualbox-guest-os
 
@@ -22,3 +23,13 @@ http://superuser.com/questions/310697/connect-to-the-host-machine-from-a-virtual
 
 * http://www.mojohaus.org/rpm-maven-plugin/example1.html
 * https://thejiraguy.wordpress.com/2013/12/17/deploying-jira-in-the-enterprise-part-2-packaging-using-the-rpm-maven-plugin
+
+
+## TEST 
+#### Install
+
+	sudo yum --assumeyes install target/rpm/apache-tomcat/RPMS/noarch/apache-tomcat-8.5.4-1.noarch.rpm
+
+#### UnInstall
+
+	sudo yum --assumeyes erase apache-tomcat

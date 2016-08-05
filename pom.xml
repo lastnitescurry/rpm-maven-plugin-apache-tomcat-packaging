@@ -1,108 +1,205 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>ie.farrengold.javaee7</groupId>
-	<artifactId>apache-tomcat</artifactId>
-	<packaging>rpm</packaging>
-	<version>8.5.4</version>
-	<name>Repackage Tomcat Distribution as rpm file which puppet can deploy</name>
-	<url>https://tomcat.apache.org/download-80.cgi</url>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ie.farrengold.javaee7</groupId>
+  <artifactId>apache-tomcat</artifactId>
+  <packaging>rpm</packaging>
+  <version>8.5.4</version>
+  <name>Repackage Tomcat Distribution as rpm file which puppet can deploy</name>
+  <url>https://tomcat.apache.org/download-80.cgi</url>
 
-	<description>Repackage Tomcat Distribution as rpm file which puppet can deploy</description>
+  <description>Repackage Tomcat Distribution as rpm file which puppet can deploy</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-		</dependency>
-		<!-- J2EE Servlet Spec -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		</dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+    </dependency>
+    <!-- J2EE Servlet Spec -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+  </dependencies>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>rpm-maven-plugin</artifactId>
-					<version>2.1.5</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>rpm-maven-plugin</artifactId>
-				<extensions>true</extensions>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>rpm-maven-plugin</artifactId>
+          <version>2.1.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>untar</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <target>
+                <untar src="${distribution.source}" dest="${basedir}/target" compression="gzip"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+        <extensions>true</extensions>
 
-				<configuration>
-					<license>Apache</license>
-					<distribution>Farrengold 2016</distribution>
-					<group>Application/Collectors</group>
+        <configuration>
+          <license>Apache Software License</license>
+          <distribution>Farrengold 2016</distribution>
+          <group>System Environmnet/Applications</group>
 
-					<defineStatements>
-						<defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-					</defineStatements>
-					<mappings>
-						<mapping>
-							<directory>/opt/app/tarball</directory>
-							<filemode>440</filemode>
-							<username>dumper</username>
-							<groupname>dumpgroup</groupname>
-							<sources>
-								<source>
-									<location>/opt/software/Apache/Tomcat/apache-tomcat-8.5.3.tar.gz</location>
-								</source>
-							</sources>
-						</mapping>
-					<!-- 
-						<mapping>
-							<directory>/usr/local/doc/landfill</directory>
-							<documentation>true</documentation>
-							<filemode>444</filemode>
-							<username>dumper</username>
-							<groupname>dumpgroup</groupname>
-							<sources>
-								<source>
-									<location>target/site</location>
-								</source>
-							</sources>
-						</mapping>
-						 -->
-						<mapping>
-							<directory>/opt/app/koe</directory>
-							<filemode>750</filemode>
-							<username>finman</username>
-							<groupname>finland</groupname>
-							<dependency>
-								<includes>
-									<include>junit:junit</include>
-									<include>javax.servlet:javax.servlet-api</include>
-								</includes>
-							</dependency>
-						</mapping>
-					</mappings>
-					<preinstallScriptlet>
-						<script>echo "installing now"</script>
-					</preinstallScriptlet>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
-		<sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-	</properties>
-	<inceptionYear>2016</inceptionYear>
-	<organization>
-		<name>FarrenGold Limited</name>
-		<url>http://www.farrengold.ie/</url>
-	</organization>
+<!-- 
+          <defineStatements>
+            <defineStatement>tomcat_home /opt/app/tomcat/%{version}</defineStatement>
+          </defineStatements>
+ -->
+          <mappings>
+            <mapping>
+              <directory>/opt/app/tomcat/${version}</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}</location>
+                </source>
+              </sources>
+            </mapping>
+            <!-- 
+            <mapping>
+              <directory>%{tomcat_home}/bin</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/bin</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>%{tomcat_home}/conf</directory>
+              <filemode>755</filemode>
+              <username>tomcat</username>
+              <groupname>tomcat</groupname>
+              <sources>
+                <source>
+                  <location>target/apache-tomcat-${project.version}/conf</location>
+                </source>
+              </sources>
+            </mapping>
+             -->
+          </mappings>
+          <!-- 
+          <prepareScriptlet>
+            <script>tar xzvf ${distribution.source}</script>
+          </prepareScriptlet>
+           -->
+          <preinstallScriptlet>
+            <script>
+getent group tomcat > /dev/null || groupadd -r tomcat
+getent passwd tomcat > /dev/null || useradd -r -g tomcat tomcat
+            </script>
+          </preinstallScriptlet>
+<!-- 
+          <installScriptlet>
+            <script>
+install -d -m 755 %{buildroot}/%{tomcat_home}/
+cp -R * %{buildroot}/%{tomcat_home}/
+            </script>
+          </installScriptlet>
+ -->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
+    <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+
+    <distribution.source>/opt/software/Apache/Tomcat/apache-tomcat-${project.version}.tar.gz</distribution.source>
+
+  </properties>
+  <inceptionYear>2016</inceptionYear>
+  <organization>
+    <name>FarrenGold Limited</name>
+    <url>http://www.farrengold.ie/</url>
+  </organization>
 </project>
