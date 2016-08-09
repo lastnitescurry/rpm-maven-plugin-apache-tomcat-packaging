@@ -1,5 +1,5 @@
 # rpm-maven-plugin-apache-tomcat-packaging
-Can the rpm-maven-plugin be used to package tomcat rpm? Need a Jenkins on RHEL or CENTOS
+Can the rpm-maven-plugin be used to package tomcat rpm? Need a Jenkins on RHEL or CENTOS. YES IT CAN!!!
 
 # RPM repackage of tomcat distribution ZIP file
 
@@ -12,6 +12,8 @@ Proving ground to see if maven rpm plugin can be used.
 * Maven Project 
 * Jenkins Job to build project
 
+This project depends on and extends the [Deployment Pipeline](https://github.com/lastnitescurry/j2ee-rest-jersey-jetty-tomcat-maven-jenkinsfile#deployment-pipeline) tools
+ 
 ## Get host ip for VM
 
 	netstat -rn
